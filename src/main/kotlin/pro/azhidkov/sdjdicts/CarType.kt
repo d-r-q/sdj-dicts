@@ -10,4 +10,12 @@ data class CarType(
     val id: Long,
     val name: String,
     val description: String
-)
+) {
+
+    companion object {
+
+        fun ref(id: Long) =
+            CarType(id, "", "")
+    }
+
+}

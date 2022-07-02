@@ -8,10 +8,14 @@ import java.time.Instant
 
 @Table("map_points")
 data class MapPoint(
-    val approved: Boolean,
+    val name: String,
     val createdAt: Instant,
     @MappedCollection(idColumn = "map_point_id")
     val carTypes: Set<CarType>,
     @Id
     val id: Long = 0,
-)
+) {
+    fun addCarType(carType: CarType): MapPoint =
+        copy(carTypes = carTypes + carType)
+
+}

@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.context.jdbc.Sql
 import org.testcontainers.containers.PostgreSQLContainer
 import java.time.Instant
 
 
 @SpringBootTest
+@Sql("/sql/demo_data.sql")
 class SdjDictsApplicationTests(
     @Autowired val repo: MapPointRepo
 ) {
@@ -44,10 +46,18 @@ class SdjDictsApplicationTests(
         val carTypes = repo.carTypes()
         println(carTypes)
 
-        val newMp = MapPoint(true, Instant.now(), carTypes.toSet())
+        val newMp = MapPoint("map_point3", Instant.now(), carTypes.toSet())
         val saved = repo.save(newMp)
         println(repo.findById(saved.id))
         println(repo.carTypes().size)
+    }
+
+    @Test
+    fun addByRef() {
+        val mapPoint = repo.findAll().first()
+        val updated = mapPoint.addCarType(CarType.ref(5))
+        val id = repo.save(updated).id
+        println(repo.findById(id))
     }
 
 }
